@@ -1,5 +1,6 @@
 local Path = require("plenary.path")
 local harpoon = require("harpoon")
+local Extensions = require("harpoon.extensions")
 
 local H = {}
 local HarpoonFern = {}
@@ -11,7 +12,6 @@ HarpoonFern.setup = function(config)
     -- apply config
     H.apply_config(config)
 end
-
 HarpoonFern.config = {
     options = {
         -- allow harpoon menu to be opened in fern buffer
@@ -157,10 +157,46 @@ H.apply_config = function(config)
             if is_fern then
                 vim.keymap.set("n", "<CR>", function()
                     local idx = vim.fn.line(".")
-                    local f = harpoon.ui.active_list.items[idx].value
+                    local list_item = harpoon.ui.active_list.items[idx]
+
+                    local f = list_item.value
+                    local ctx = list_item.context
+
                     harpoon.ui:save()
                     harpoon.ui:close_menu()
                     vim.fn["fern#internal#buffer#open"](f, { opener = config.options.fern_opener })
+
+                    local lines = vim.api.nvim_buf_line_count(vim.fn.bufnr("%"))
+
+                    local edited = false
+                    if ctx.row > lines then
+                        ctx.row = lines
+                        edited = true
+                    end
+
+                    local row = ctx.row
+                    local row_text =
+                        vim.api.nvim_buf_get_lines(0, row - 1, row, false)
+                    local col = #row_text[1]
+
+                    if ctx.col > col then
+                        ctx.col = col
+                        edited = true
+                    end
+
+                    vim.api.nvim_win_set_cursor(0, {
+                        ctx.row or 1,
+                        ctx.col or 0,
+                    })
+
+                    if edited then
+                        Extensions.extensions:emit(
+                            Extensions.event_names.POSITION_UPDATED,
+                            {
+                                list_item = list_item,
+                            }
+                        )
+                    end
                 end, { buffer = cx.bufnr, remap = true })
             end
         end,
