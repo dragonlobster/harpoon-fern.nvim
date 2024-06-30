@@ -1,6 +1,7 @@
 local Path = require("plenary.path")
 local harpoon = require("harpoon")
-local Extensions = require("harpoon.extensions")
+local HConfig = require("harpoon.config")
+local HExtensions = require("harpoon.extensions")
 
 local H = {}
 local HarpoonFern = {}
@@ -12,6 +13,7 @@ HarpoonFern.setup = function(config)
     -- apply config
     H.apply_config(config)
 end
+
 HarpoonFern.config = {
     options = {
         -- allow harpoon menu to be opened in fern buffer
@@ -29,36 +31,39 @@ HarpoonFern.config = {
 
     harpoon_add = {
         -- harpoon add for fern buffer
-        fern = function(item)
-            harpoon:list():add(item)
+        fern = function(item, harpoon_list)
+            harpoon:list(harpoon_list):add(item)
         end,
 
         -- harpoon add for non fern buffer
-        non_fern = function()
-            harpoon:list():add()
+        non_fern = function(harpoon_list)
+            harpoon:list(harpoon_list):add()
         end
     },
 
     harpoon_menu = {
         -- harpoon menu for fern buffer
-        fern = function()
-            harpoon.ui:toggle_quick_menu(harpoon:list())
+        fern = function(harpoon_list)
+            harpoon.ui:toggle_quick_menu(harpoon:list(harpoon_list))
         end,
 
         -- harpoon menu for non fern buffer
-        non_fern = function()
-            harpoon.ui:toggle_quick_menu(harpoon:list())
+        non_fern = function(harpoon_list)
+            harpoon.ui:toggle_quick_menu(harpoon:list(harpoon_list))
         end
     }
 }
 
-HarpoonFern.harpoon_add = function()
+HarpoonFern.harpoon_add = function(harpoon_list)
+    -- default harpoon_list
+    harpoon_list = harpoon_list or HConfig.DEFAULT_LIST
+
     --  get config
     local config = HarpoonFern.config
 
     -- non fern buffer
     if vim.bo.filetype ~= "fern" and config.options.harpoon_override then
-        config.harpoon_add.non_fern()
+        config.harpoon_add.non_fern(harpoon_list)
 
         -- notify
         if config.options.notify then
@@ -93,7 +98,7 @@ HarpoonFern.harpoon_add = function()
         }
 
         -- add the specific item
-        config.harpoon_add.fern(item)
+        config.harpoon_add.fern(item, harpoon_list)
 
         -- notify
         if config.options.notify then
@@ -102,12 +107,15 @@ HarpoonFern.harpoon_add = function()
     end
 end
 
-HarpoonFern.harpoon_menu = function()
+HarpoonFern.harpoon_menu = function(harpoon_list)
+    -- default harpoon_list
+    harpoon_list = harpoon_list or HConfig.DEFAULT_LIST
+
     -- get config
     local config = HarpoonFern.config
 
     if config.options.allow_menu and vim.bo.filetype == "fern" then
-        config.harpoon_menu.fern()
+        config.harpoon_menu.fern(harpoon_list)
 
         -- disable opening menu in fern buffer
     elseif not config.options.allow_menu and vim.bo.filetype == "fern" then
@@ -115,7 +123,7 @@ HarpoonFern.harpoon_menu = function()
 
         -- non fern buffer
     else
-        config.harpoon_menu.non_fern()
+        config.harpoon_menu.non_fern(harpoon_list)
     end
 end
 
@@ -190,8 +198,8 @@ H.apply_config = function(config)
                     })
 
                     if edited then
-                        Extensions.extensions:emit(
-                            Extensions.event_names.POSITION_UPDATED,
+                        HExtensions.extensions:emit(
+                            HExtensions.event_names.POSITION_UPDATED,
                             {
                                 list_item = list_item,
                             }
