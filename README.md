@@ -49,7 +49,6 @@ Replace the following mappings that you have already set for harpoon; the new on
 
 ```lua
 -- ADD ITEM TO A LIST
---====================================
 -- local harpoon = require("harpoon")
 -- harpoon:list():add()
 
@@ -57,13 +56,11 @@ local harpoon_fern = require("harpoon-fern")
 harpoon_fern.harpoon_add()
 
 -- ADD ITEM TO A CUSTOM LIST
---====================================
 -- harpoon:list("custom"):add()
 
 harpoon_fern.harpoon_add("custom")
 
 -- OPEN MENU
---====================================
 -- harpoon.ui:toggle_quick_menu(harpoon:list())
 
 harpoon_fern.harpoon_menu()
@@ -92,9 +89,7 @@ harpoon_fern.harpoon_menu("custom") -- open custom menu
         harpoon_override = true
     },
 
---====================================
 -- ADVANCED SETTINGS BELOW: customize the harpoon_add and harpoon_menu functions for fern and non-fern buffers if you want.
---====================================
 
     harpoon_add = {
         -- harpoon add for fern buffer
