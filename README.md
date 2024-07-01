@@ -20,6 +20,7 @@ The goal of this plugin to integrate `harpoon` with `fern.vim` for Neovim. This 
 ## Getting Started
 
 ### Dependencies
+
 * [ThePrimagen/harpoon](https://github.com/ThePrimeagen/harpoon/tree/harpoon2) (harpoon2 branch)
 
 * [fern.vim](https://github.com/lambdalisue/vim-fern)
@@ -33,8 +34,7 @@ Using Lazy:
 
 ```lua
 {
-    name = "harpoon-fern",
-    dir = "/Users/Fake/Projects/harpoon-fern",
+    "dragonlobster/harpoon-fern.nvim"
     dependencies = { "harpoon", "fern.vim", "plenary.nvim" },
     config = function()
         require("harpoon-fern").setup()
