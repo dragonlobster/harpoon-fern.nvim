@@ -1,11 +1,11 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-The goal of this plugin to integrate `harpoon` with `fern.vim` for Neovim. This plugin is only useful to you if you:
+The goal of this plugin to integrate `harpoon` with `vim-fern` for Neovim. This plugin is only useful to you if you:
 
 1. Use Neovim
 2. Use [ThePrimagen/harpoon](https://github.com/ThePrimeagen/harpoon/tree/harpoon2) plugin and the `harpoon2` branch
-3. Use the `fern.vim` plugin with Neovim
+3. Use the `vim-fern` plugin with Neovim
 
 <!-- FEATURES -->
 ## Features
@@ -23,7 +23,7 @@ The goal of this plugin to integrate `harpoon` with `fern.vim` for Neovim. This 
 
 * [ThePrimagen/harpoon](https://github.com/ThePrimeagen/harpoon/tree/harpoon2) (harpoon2 branch)
 
-* [fern.vim](https://github.com/lambdalisue/vim-fern)
+* [vim-fern](https://github.com/lambdalisue/vim-fern)
 
 * [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
 
@@ -35,7 +35,7 @@ Using Lazy:
 ```lua
 {
     "dragonlobster/harpoon-fern.nvim"
-    dependencies = { "harpoon", "fern.vim", "plenary.nvim" },
+    dependencies = { "harpoon", "vim-fern", "plenary.nvim" },
     config = function()
         require("harpoon-fern").setup()
     end
